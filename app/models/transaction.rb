@@ -1,3 +1,5 @@
 class Transaction < ApplicationRecord
-  belongs_to :invoices
+  belongs_to :invoice
+  has_many :customers, through: :invoice
+  has_many :merchants, through: :invoice
 end
