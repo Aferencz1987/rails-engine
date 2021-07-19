@@ -10,8 +10,8 @@ describe 'Merchant API' do
 
       merchants = JSON.parse(response.body, symbolize_names: true)
 
-      expect(merchants.count).to eq(10)
-      expect(merchants.first[:name]).to be_a(String)
+      expect(merchants[:data].count).to eq(10)
+      expect(merchants[:data].first[:name]).to be_a(String)
     end
 
     it 'shows 20 merchants by default' do
@@ -22,28 +22,24 @@ describe 'Merchant API' do
 
       merchants = JSON.parse(response.body, symbolize_names: true)
 
-      expect(merchants.count).to eq(20)
-
+      expect(merchants[:data].count).to eq(20)
     end
 
     it 'shows merchants by user designated number per page' do
       create_list(:merchant, 70)
-
       get '/api/v1/merchants?per_page=50'
 
       expect(response).to be_successful
 
       merchants = JSON.parse(response.body, symbolize_names: true)
 
-      expect(merchants.count).to eq(20)
+      expect(merchants[:data].count).to eq(50)
     end
   end
 
   describe 'merchant show call' do
     it 'can show 1 merchant' do
-
       merchant_id = create(:merchant).id
-
       get "/api/v1/merchants/#{merchant_id}"
 
       expect(response).to be_successful
@@ -52,7 +48,6 @@ describe 'Merchant API' do
 
       expect(merchant).to have_key(:id)
       expect(merchant[:id]).to eq(merchant_id)
-
       expect(merchant).to have_key(:name)
       expect(merchant[:name]).to be_a(String)
     end
@@ -64,13 +59,13 @@ describe 'Merchant API' do
       item1 = create(:item, merchant: merchant)
       item2 = create(:item, merchant: merchant)
 
-      get "/api/v1/merchants/#{merchant_id}/items"
+      get "/api/v1/merchants/#{merchant.id}/items"
 
       expect(response).to be_successful
 
       merchant_items = JSON.parse(response.body, symbolize_names: true)
 
       expect(merchant_items.count).to eq(2)
-
+    end
   end
 end
