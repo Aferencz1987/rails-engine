@@ -16,8 +16,21 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def find
-    found = Merchant.where('name ILIKE ?', "%#{params[:name]}%")
+    if params[:name]
+      found = Merchant.find_by('name ILIKE ?', "%#{params[:name]}%")
+      render json: found
+    else
+      render status: :not_found
   #   find by a portion of the name. use active record to find any piece
-    render json: found
+    end
+  end
+
+  def find_all
+    if params[:name]
+      found = Merchant.where('name ILIKE ?', "%#{params[:name]}%")
+      render json: found
+    else
+      render status: :not_found
+    end
   end
 end

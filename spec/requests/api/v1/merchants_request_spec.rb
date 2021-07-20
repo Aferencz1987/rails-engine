@@ -69,11 +69,11 @@ describe 'Merchant API' do
   end
 
   describe 'merchant find by name' do
-    xit 'will error if no search param' do
+    it 'will error if no search param' do
     create_list(:merchant, 4)
 
 
-    get '/api/v1/merchants/find?name='
+    get '/api/v1/merchants/find?'
 
     expect(response).to_not be_successful
     end
@@ -85,19 +85,23 @@ describe 'Merchant API' do
       get '/api/v1/merchants/find?name=m'
       expect(response).to be_successful
       merchant_result = JSON.parse(response.body, symbolize_names: true)
-      name = merchant_result[:data][0][:attributes][:name]
+      name = merchant_result[:data][:attributes][:name]
       expect(name).to eq(merchant.name)
       expect(name).to_not eq(bad_merchant.name)
 
-      # get '/api/v1/merchants/find?name=ma'
-      # expect(response).to be_successful
-      # merchant = JSON.parse(response.body, symbolize_names: true)
-      #
-      # get '/api/v1/merchants/find?name=max'
-      # expect(response).to be_successful
-      # merchant = JSON.parse(response.body, symbolize_names: true)
-# look for AR one thing or nil, not array like relationship
+      get '/api/v1/merchants/find?name=ma'
+      expect(response).to be_successful
+      merchant_result = JSON.parse(response.body, symbolize_names: true)
+      name = merchant_result[:data][:attributes][:name]
+      expect(name).to eq(merchant.name)
+      expect(name).to_not eq(bad_merchant.name)
 
+      get '/api/v1/merchants/find?name=max'
+      expect(response).to be_successful
+      merchant_result = JSON.parse(response.body, symbolize_names: true)
+      name = merchant_result[:data][:attributes][:name]
+      expect(name).to eq(merchant.name)
+      expect(name).to_not eq(bad_merchant.name)
     end
   end
 end
