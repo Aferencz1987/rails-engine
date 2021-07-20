@@ -11,7 +11,7 @@ describe 'Merchant API' do
       merchants = JSON.parse(response.body, symbolize_names: true)
 
       expect(merchants[:data].count).to eq(10)
-      expect(merchants[:data].first[:name]).to be_a(String)
+      expect(merchants[:data].first[:attributes][:name]).to be_a(String)
 
     end
 
@@ -64,11 +64,12 @@ describe 'Merchant API' do
       expect(response).to be_successful
       merchant_items = JSON.parse(response.body, symbolize_names: true)
       expect(merchant_items[:data].count).to eq(2)
+      #test for serializer here by checking structure (keys and such)
     end
   end
 
   describe 'merchant find by name' do
-    it 'will error if no search param' do
+    xit 'will error if no search param' do
     create_list(:merchant, 4)
 
 
@@ -95,6 +96,7 @@ describe 'Merchant API' do
       # get '/api/v1/merchants/find?name=max'
       # expect(response).to be_successful
       # merchant = JSON.parse(response.body, symbolize_names: true)
+# look for AR one thing or nil, not array like relationship
 
     end
   end
