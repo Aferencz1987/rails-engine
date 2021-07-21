@@ -24,7 +24,7 @@ class Api::V1::ItemsController < ApplicationController
 
   def find_all
     if params[:name]
-      found = Merchant.where('name ILIKE ?', "%#{params[:name]}%")
+      found = Item.where('name ILIKE ?', "%#{params[:name]}%")
       render json: found
     else
       render status: :not_found

@@ -71,8 +71,6 @@ describe 'Merchant API' do
   describe 'merchant/s find by name' do
     it 'will error if no search param find' do
       create_list(:merchant, 4)
-
-
       get '/api/v1/merchants/find?'
 
       expect(response).to_not be_successful
@@ -80,13 +78,14 @@ describe 'Merchant API' do
 
     it 'finds a merchant by partial name' do
       merchant = create(:merchant, name: "Max")
-      merchant1 = create(:merchant, name: "Max")
+      merchant1 = create(:merchant, name: "Maxene")
       bad_merchant = create(:merchant, name: "Axe")
 
       get '/api/v1/merchants/find?name=m'
       expect(response).to be_successful
       merchant_result = JSON.parse(response.body, symbolize_names: true)
       name = merchant_result[:data][:attributes][:name]
+      expect(merchant_result.count).to eq(1)
       expect(name).to eq(merchant.name)
       expect(name).to_not eq(bad_merchant.name)
 
@@ -108,9 +107,7 @@ describe 'Merchant API' do
     it 'will error if no search param find_all' do
       create_list(:merchant, 4)
 
-
       get '/api/v1/merchants/find_all?'
-
       expect(response).to_not be_successful
     end
 
@@ -123,6 +120,7 @@ describe 'Merchant API' do
       expect(response).to be_successful
       merchant_result = JSON.parse(response.body, symbolize_names: true)
       name = merchant_result[:data][0][:attributes][:name]
+      expect(merchant_result[:data].count).to eq(2)
       expect(name).to eq(merchant.name)
       expect(name).to_not eq(bad_merchant.name)
 

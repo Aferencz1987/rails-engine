@@ -70,7 +70,7 @@ describe 'Item API' do
     end
   end
 
-  describe 'item find by name' do
+  describe 'item/s find by name' do
     it 'will error if no search param' do
       merchant = create(:merchant)
       create_list(:item, 4, merchant: merchant)
@@ -82,19 +82,17 @@ describe 'Item API' do
     it 'finds item by partial name' do
       merchant = create(:merchant)
       item = create(:item, name: "Max", merchant: merchant)
+      item1 = create(:item, name: "Maxene", merchant: merchant)
       bad_item = create(:item, name: "Axe", merchant: merchant)
+
       get '/api/v1/items/find?name=m'
       expect(response).to be_successful
       item_result = JSON.parse(response.body, symbolize_names: true)
       name = item_result[:data][:attributes][:name]
+      expect(item_result.count).to eq(1)
       expect(name).to eq(item.name)
       expect(name).to_not eq(bad_item.name)
-    end
 
-    it 'finds item by more than one letter' do
-      merchant = create(:merchant)
-      item = create(:item, name: "Max", merchant: merchant)
-      bad_item = create(:item, name: "Axe", merchant: merchant)
       get '/api/v1/items/find?name=ma'
       expect(response).to be_successful
 
@@ -102,16 +100,51 @@ describe 'Item API' do
       name = item_result[:data][:attributes][:name]
       expect(name).to eq(item.name)
       expect(name).to_not eq(bad_item.name)
-    end
 
-    it 'finds with full name' do
-      merchant = create(:merchant)
-      item = create(:item, name: "Max", merchant: merchant)
-      bad_item = create(:item, name: "Axe", merchant: merchant)
       get '/api/v1/items/find?name=max'
       expect(response).to be_successful
       item_result = JSON.parse(response.body, symbolize_names: true)
       name = item_result[:data][:attributes][:name]
+      expect(name).to eq(item.name)
+      expect(name).to_not eq(bad_item.name)
+    end
+    it 'will error if no search param find_all' do
+      merchant = create(:merchant)
+      item = create(:item, name: "Max", merchant: merchant)
+      item1 = create(:item, name: "Maxene", merchant: merchant)
+      bad_item = create(:item, name: "Axe", merchant: merchant)
+
+      get '/api/v1/merchants/find_all?'
+      expect(response).to_not be_successful
+    end
+
+    it 'finds items by partial name' do
+      merchant = create(:merchant)
+      item = create(:item, name: "Max", merchant: merchant)
+      item1 = create(:item, name: "Maxene", merchant: merchant)
+      bad_item = create(:item, name: "Axe", merchant: merchant)
+
+      get '/api/v1/items/find_all?name=m'
+      expect(response).to be_successful
+      item_result = JSON.parse(response.body, symbolize_names: true)
+      name = item_result[:data][0][:attributes][:name]
+      expect(item_result[:data].count).to eq(2)
+      expect(name).to eq(item.name)
+      expect(name).to_not eq(bad_item.name)
+
+      get '/api/v1/items/find_all?name=ma'
+      expect(response).to be_successful
+      item_result = JSON.parse(response.body, symbolize_names: true)
+      name = item_result[:data][0][:attributes][:name]
+      expect(item_result[:data].count).to eq(2)
+      expect(name).to eq(item.name)
+      expect(name).to_not eq(bad_item.name)
+
+      get '/api/v1/items/find_all?name=max'
+      expect(response).to be_successful
+      item_result = JSON.parse(response.body, symbolize_names: true)
+      name = item_result[:data][0][:attributes][:name]
+      expect(item_result[:data].count).to eq(2)
       expect(name).to eq(item.name)
       expect(name).to_not eq(bad_item.name)
     end
