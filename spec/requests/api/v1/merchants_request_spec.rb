@@ -68,18 +68,19 @@ describe 'Merchant API' do
     end
   end
 
-  describe 'merchant find by name' do
-    it 'will error if no search param' do
-    create_list(:merchant, 4)
+  describe 'merchant/s find by name' do
+    it 'will error if no search param find' do
+      create_list(:merchant, 4)
 
 
-    get '/api/v1/merchants/find?'
+      get '/api/v1/merchants/find?'
 
-    expect(response).to_not be_successful
+      expect(response).to_not be_successful
     end
 
-    it 'finds merchant by partial name' do
+    it 'finds a merchant by partial name' do
       merchant = create(:merchant, name: "Max")
+      merchant1 = create(:merchant, name: "Max")
       bad_merchant = create(:merchant, name: "Axe")
 
       get '/api/v1/merchants/find?name=m'
@@ -100,6 +101,42 @@ describe 'Merchant API' do
       expect(response).to be_successful
       merchant_result = JSON.parse(response.body, symbolize_names: true)
       name = merchant_result[:data][:attributes][:name]
+      expect(name).to eq(merchant.name)
+      expect(name).to_not eq(bad_merchant.name)
+    end
+
+    it 'will error if no search param find_all' do
+      create_list(:merchant, 4)
+
+
+      get '/api/v1/merchants/find_all?'
+
+      expect(response).to_not be_successful
+    end
+
+    it 'finds merchants by partial name' do
+      merchant = create(:merchant, name: "Max")
+      merchant1 = create(:merchant, name: "Maxene")
+      bad_merchant = create(:merchant, name: "Axe")
+
+      get '/api/v1/merchants/find_all?name=m'
+      expect(response).to be_successful
+      merchant_result = JSON.parse(response.body, symbolize_names: true)
+      name = merchant_result[:data][0][:attributes][:name]
+      expect(name).to eq(merchant.name)
+      expect(name).to_not eq(bad_merchant.name)
+
+      get '/api/v1/merchants/find_all?name=ma'
+      expect(response).to be_successful
+      merchant_result = JSON.parse(response.body, symbolize_names: true)
+      name = merchant_result[:data][0][:attributes][:name]
+      expect(name).to eq(merchant.name)
+      expect(name).to_not eq(bad_merchant.name)
+
+      get '/api/v1/merchants/find_all?name=max'
+      expect(response).to be_successful
+      merchant_result = JSON.parse(response.body, symbolize_names: true)
+      name = merchant_result[:data][0][:attributes][:name]
       expect(name).to eq(merchant.name)
       expect(name).to_not eq(bad_merchant.name)
     end

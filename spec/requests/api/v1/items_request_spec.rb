@@ -83,23 +83,32 @@ describe 'Item API' do
       merchant = create(:merchant)
       item = create(:item, name: "Max", merchant: merchant)
       bad_item = create(:item, name: "Axe", merchant: merchant)
-
       get '/api/v1/items/find?name=m'
       expect(response).to be_successful
       item_result = JSON.parse(response.body, symbolize_names: true)
       name = item_result[:data][:attributes][:name]
       expect(name).to eq(item.name)
       expect(name).to_not eq(bad_item.name)
+    end
 
-      get '/api/v1/merchants/find?name=ma'
+    it 'finds item by more than one letter' do
+      merchant = create(:merchant)
+      item = create(:item, name: "Max", merchant: merchant)
+      bad_item = create(:item, name: "Axe", merchant: merchant)
+      get '/api/v1/items/find?name=ma'
       expect(response).to be_successful
+
       item_result = JSON.parse(response.body, symbolize_names: true)
-      require "pry"; binding.pry
       name = item_result[:data][:attributes][:name]
       expect(name).to eq(item.name)
       expect(name).to_not eq(bad_item.name)
+    end
 
-      get '/api/v1/merchants/find?name=max'
+    it 'finds with full name' do
+      merchant = create(:merchant)
+      item = create(:item, name: "Max", merchant: merchant)
+      bad_item = create(:item, name: "Axe", merchant: merchant)
+      get '/api/v1/items/find?name=max'
       expect(response).to be_successful
       item_result = JSON.parse(response.body, symbolize_names: true)
       name = item_result[:data][:attributes][:name]

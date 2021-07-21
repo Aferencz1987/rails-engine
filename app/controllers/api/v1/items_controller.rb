@@ -19,7 +19,15 @@ class Api::V1::ItemsController < ApplicationController
       render json: found
     else
       render status: :not_found
-  #   find by a portion of the name. use active record to find any piece
+    end
+  end
+
+  def find_all
+    if params[:name]
+      found = Merchant.where('name ILIKE ?', "%#{params[:name]}%")
+      render json: found
+    else
+      render status: :not_found
     end
   end
 end
