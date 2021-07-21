@@ -3,11 +3,8 @@ require './app/controllers/concerns/offset_by_pageable'
 class Api::V1::MerchantsController < ApplicationController
   include OffsetByPageable
   def index
-    if params[:per_page]
-      merchants = Merchant.all.limit(params[:per_page]).offset(create_offset)
-    else
-      merchants = Merchant.all.limit(20).offset(create_offset)
-    end
+    merchants = Merchant.all.limit(params[:per_page]).offset(create_offset) if params[:per_page]
+    merchants = Merchant.all.limit(20).offset(create_offset) unless params[:per_page]
     render json: merchants
   end
 
@@ -16,20 +13,13 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def find
-    if params[:name]
-      found = Merchant.find_by('name ILIKE ?', "%#{params[:name]}%")
-      render json: found
-    else
-      render status: :not_found
-    end
+    render json: Merchant.find_by('name ILIKE ?', "%#{params[:name]}%") if params[:name]
+    render status: :not_found unless params[:name]
   end
 
   def find_all
-    if params[:name]
-      found = Merchant.where('name ILIKE ?', "%#{params[:name]}%")
-      render json: found
-    else
-      render status: :not_found
-    end
+    render json: Merchant.where('name ILIKE ?', "%#{params[:name]}%") if params[:name]
+    render status: :not_found unless params[:name]
   end
 end
+# http://localhost:3000/api/v1/revenue/merchants?quantity=10

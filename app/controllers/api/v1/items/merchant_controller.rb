@@ -4,6 +4,5 @@ class Api::V1::Items::MerchantController < ApplicationController
     render json: item.merchant
   end
 
-  def show
-  end
+  def show; end
 end

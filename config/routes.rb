@@ -4,7 +4,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/merchants/find', to: 'merchants#find'
       get '/merchants/find_all', to: 'merchants#find_all'
+      get '/revenue/merchants', to: 'revenue#top_revenue'
 
+      
       resources :merchants do
 
         resources :items, module: 'merchants', only: [:index, :show]
@@ -12,7 +14,7 @@ Rails.application.routes.draw do
 
       get '/items/find', to: 'items#find'
       get '/items/find_all', to: 'items#find_all'
-      
+
       resources :items do
         resources :merchant, module: 'items', only: [:index, :show]
       end
