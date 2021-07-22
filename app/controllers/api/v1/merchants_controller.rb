@@ -1,23 +1,11 @@
-class Api::V1::MerchantsController < ApplicationController
-  def index
-    if params[:per_page]
-      if (params[:page]).to_i > 1
-        offset = params[:per_page].to_i * (params[:page].to_i - 1)
-      else
-        offset = 0
-      end
-      merchants_custom_page_limit = Merchant.all.limit(params[:per_page]).offset(offset)
+require './app/controllers/concerns/offset_by_pageable'
 
-      render json: merchants_custom_page_limit
-    else
-      if (params[:page]).to_i > 1
-        offset = 20 * (params[:page].to_i - 1)
-      else
-        offset = 0
-      end
-      merchants_default_page_limit = Merchant.all.limit(20).offset(offset)
-      render json: merchants_default_page_limit
-    end
+class Api::V1::MerchantsController < ApplicationController
+  include OffsetByPageable
+  def index
+    merchants = Merchant.all.limit(params[:per_page]).offset(create_offset) if params[:per_page]
+    merchants = Merchant.all.limit(20).offset(create_offset) unless params[:per_page]
+    render json: merchants
   end
 
   def show
@@ -25,8 +13,12 @@ class Api::V1::MerchantsController < ApplicationController
   end
 
   def find
-    found = Merchant.where('name ILIKE ?', "%#{params[:name]}%")
-  #   find by a portion of the name. use active record to find any piece
-    render json: found
+    render json: Merchant.find_by('name ILIKE ?', "%#{params[:name]}%") if params[:name]
+    render status: :not_found unless params[:name]
+  end
+
+  def find_all
+    render json: Merchant.where('name ILIKE ?', "%#{params[:name]}%") if params[:name]
+    render status: :not_found unless params[:name]
   end
 end
