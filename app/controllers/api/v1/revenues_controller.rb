@@ -1,6 +1,5 @@
 class Api::V1::RevenuesController < ApplicationController
-  def top_merchants(quantity_params)
-    Merchant.top_revenue(quantity_params)
+  def top_merchants
+    Merchant.top_revenue(params[:quantity])
   end
-
 end

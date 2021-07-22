@@ -7,6 +7,6 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
 
   def self.top_revenue(quantity)
-
+require "pry"; binding.pry
   end
 end

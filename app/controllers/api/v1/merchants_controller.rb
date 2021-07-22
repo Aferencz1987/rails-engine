@@ -22,4 +22,3 @@ class Api::V1::MerchantsController < ApplicationController
     render status: :not_found unless params[:name]
   end
 end
-# http://localhost:3000/api/v1/revenue/merchants?quantity=10

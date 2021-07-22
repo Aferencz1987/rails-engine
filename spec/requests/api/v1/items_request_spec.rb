@@ -57,6 +57,42 @@ describe 'Item API' do
     end
   end
 
+  describe 'CRUD' do
+    it 'can create an item'do
+    merchant = create(:merchant)
+    item_params = { name: 'Pen',
+                  description: 'Writes stuff',
+                  unit_price: 25.1,
+                  merchant_id: "#{merchant.id}"}
+
+    post '/api/v1/items', params: item_params
+    expect(response).to be_successful
+    new_item = JSON.parse(response.body, symbolize_names: true)
+    expect(new_item[:data]).to have_key(:attributes)
+    expect(new_item[:data][:attributes]).to have_key(:name)
+    expect(new_item[:data][:attributes][:name]).to be_a(String)
+    expect(new_item[:data][:attributes]).to have_key(:description)
+    expect(new_item[:data][:attributes][:description].class).to eq(String)
+    expect(new_item[:data][:attributes]).to have_key(:unit_price)
+    expect(new_item[:data][:attributes][:unit_price]).to be_a(Float)
+    expect(new_item[:data][:attributes]).to have_key(:merchant_id)
+    end
+
+    it 'can update an item'do
+    merchant = create(:merchant)
+    item = create(:item, merchant: merchant)
+    new_description = {description: "Look at my cool new description baby!"}
+
+    patch "/api/v1/items/#{item.id}", params: new_description
+
+    expect(response).to be_successful
+    updated_item = JSON.parse(response.body, symbolize_names: true)
+    expect(new_item[:data][:attributes]).to have_key(:description)
+    expect(new_item[:data][:attributes][:description]).to eq("Look at my cool new description baby!")
+
+    end
+  end
+
   describe 'item merchant call' do
     it 'can show an items merchant' do
       merchant = create(:merchant)
