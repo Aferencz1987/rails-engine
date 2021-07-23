@@ -21,4 +21,16 @@ class Api::V1::MerchantsController < ApplicationController
     render json: Merchant.where('name ILIKE ?', "%#{params[:name]}%") if params[:name]
     render status: :not_found unless params[:name]
   end
+
+  def most_items
+    if params[:quantity].to_i == 0 || params[:quantity].to_i.negative?
+      render json: {message: 'You lost boo boo',
+              error: ['Item number less than 1. Please provide quantity greater than 1.']},
+              status: :bad_request
+    elsif params[:quantity]
+      render json: Merchant.most_items_sold(params[:quantity]), each_serializer: MostItemSerializer
+    else
+      render json: Merchant.most_items_sold(5), each_serializer: MostItemSerializer
+    end
+  end
 end
