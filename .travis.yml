@@ -6,8 +6,9 @@ addons:
 services:
   - postgresql
 script:
-  - bundle exec rails db:{create,migrate} RAILS_ENV=test
-  - bundle exec rspec
+- bundle exec rails db:create RAILS_ENV=test
+- bundle exec rails db:schema:load
+- bundle exec rspec
 deploy:
   provider: heroku
   app: serene-woodland-32887
@@ -15,3 +16,5 @@ deploy:
   run: rails db:migrate
   on:
     branch: main
+notifications:
+  email: false
