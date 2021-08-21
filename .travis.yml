@@ -10,10 +10,7 @@ before_script:
 script:
   - bundle exec rails db:{create,migrate} RAILS_ENV=test
   - bundle exec rspec
-
-# deploy:
-#   provider: heroku
-#   app: epeolatry-back-end
-#   api_key:
-#     secure: Mz4SG0eMQzFnHbS4jmwKqFyAXLoZL6LV4mLYPCGMmswJzuQcYYOecmFKPLx/+u9qls7yra3r2LD/2NTM3uu74sKFkQ4gCKH4uLBSaOhMxQjo0IPu7uMILc1tQPKZMshDcf5AUIdQt9qCC3f3XKydMQ+6r4iW40j8e+QG1dhzFplJC+1WXvyb7ea+6zLv727/LrUmNvtn+ISdMGKSIYooJHWDlTtTveD9aMaX8SGJZp9+gbb79ZaiN6SPQL5lgedeINcTZQW0NLqB17st+mW9vpamNJHuyRZnDbXE/WfsIPCbCAnICt48pDSYlJ5jW8q61xJOgvdSSxMaSZiYLcYFbQcjmuIUHGhAC0OouP9sFvgnooYb7q+3wR0DSpZ/VUz7ESqiSW6fIxzaGXBI6fmmKQ+iK1Q4UU9zTIIpNKNqR9NDgoPmNJPg8MXJRJlTDT3A6QAYPuPROOnm7LHdYvrhon0iQj9ngmMFLPhpDrOcWFXfzfJn5CHT+i1IInBN+XOGgVGCx/mXkguPhipk9slhcRQHZC3CbANAEp0nyDHTNr9cbbe/6tUqX3cm08/P9E9X9j4mm+JtoRfgnn2zRi9gpOghyrfIB65MYu3CC3AWQaTTLaO43N9TYuL/BBUJl8VLrEk7GMV+3OQfv2HAMcrR5ETNpdSBvV3WrABlNJfPYis=
-#   run: rai
+deploy:
+  provider: heroku
+  app: serene-woodland-32887
+  run: rails db:migrate
