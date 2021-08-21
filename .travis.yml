@@ -5,12 +5,13 @@ addons:
   postgresql: 9.6
 services:
   - postgresql
-before_script:
-  - cp config/database.yml.travis config/database.yml
 script:
   - bundle exec rails db:{create,migrate} RAILS_ENV=test
   - bundle exec rspec
 deploy:
   provider: heroku
   app: serene-woodland-32887
+  api_key: $HEROKU_API_KEY
   run: rails db:migrate
+  on:
+    branch: main
