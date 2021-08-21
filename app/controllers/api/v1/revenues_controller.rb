@@ -13,5 +13,6 @@ class Api::V1::RevenuesController < ApplicationController
       render json: {message: 'You lost boo boo',
               error: ['No start or end date provided. Please provide start or end date.']},
               status: :bad_request
+    end
   end
 end

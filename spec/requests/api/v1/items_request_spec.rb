@@ -87,8 +87,8 @@ describe 'Item API' do
 
     expect(response).to be_successful
     updated_item = JSON.parse(response.body, symbolize_names: true)
-    expect(new_item[:data][:attributes]).to have_key(:description)
-    expect(new_item[:data][:attributes][:description]).to eq("Look at my cool new description baby!")
+    expect(updated_item[:data][:attributes]).to have_key(:description)
+    expect(updated_item[:data][:attributes][:description]).to eq("Look at my cool new description baby!")
 
     end
   end

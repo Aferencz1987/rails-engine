@@ -28,15 +28,12 @@ describe 'Revenue API' do
   end
 
   it 'can top revenue by amount' do
-
-
     quantity = 3
 
     get "/api/v1/revenue/merchants?quantity=#{quantity}"
     expect(response).to be_successful
     top_merchants = JSON.parse(response.body, symbolize_names: true)
-
     expect(top_merchants[:data][0][:attributes]).to have_key(:revenue)
-    expect(top_merchants[:data].count).to eq(2)
+    expect(top_merchants[:data].count).to eq(3)
   end
 end
